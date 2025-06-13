@@ -17,42 +17,141 @@
         function ChatInput() {
             return (
             <div>
-                <input placeholder="Send a message to Chatbot..." size="30"/> 
-                <button>Send</button>   
+                <input 
+                    placeholder="Send a message to Chatbot..." size="30"
+                /> 
+                <button 
+                >Send</button>   
             </div>
         )
         }
 
-        function ChatMessage(){
-            return (
-                <>
-                hello chatbot
-                <img src="./user.png" width="50"/>
-                </>
-            )
-        }
+        // removing or distructuring the props simpler you can send the values as props to 
+        function ChatMessage({message, sender}){
 
-        function BotResponse() {
+            // shutcuts for creating a props variable i.e destructuring
+            // const message = props.message
+            // const sender = props.sender
+
+            // const {message, sender} = props
+
+
+            /*if (sender === "user"){
+                return (
+                    <div>
+                        <img src="./robot.png" width="50"/>
+                        {message}
+                    </div>
+                );
+            }*/
+
+            /* we will use the gaurd operator or && notation shutcut to add the if statement in our JSX
+            syntax = value1 is true, then value 2 is result*/
+
+
             return (
                 <div>
-                    <img src="./robot.png" width="50"/>
-                    Hello! How can I help you?Hello! How can I help you?
+                    {sender === 'robot' && (
+                        <img src="./robot.png" width="50"/>
+                    )}
+                    {message}
+                    {sender === 'user' && (
+                        <img src="./user.png" width="50"/>
+                    )}
+                
+                
                 </div>
             )
         }
 
-        const app = (
-            <>  
-                <ChatInput />
+        function ChatMessages() {
 
-                <ChatMessage />
-                <BotResponse />
+          // creating chatMessage as a state to save the webpage current state 
+          // react states are stored in arrays and that array takes 2 values 
+          // the second element in the array takes is created using the "set" word followed by the variable itself and you don't update it directly using .push but rather this way since in react it updates the HTML
+
+          // destructuring our state array we have 
+          // const chatMessages = array[0];
+          // const setChatMessages = array[1]
+
+
+          const [chatMessages, setChatMessages] = React.useState([{
+                message: 'Hello Chatbot',
+                sender: 'user',
+                id: 'id1'
+            }, {
+                message: 'Hello, how can i help you?',
+                sender: 'robot',
+                id: 'id2'
+            }, {
+                message: 'can you get me today\'s date',
+                sender: 'user',
+                id: 'id3'
+            }, {
+                message: 'Today is June 05',
+                sender: 'robot',
+                id: 'id4'
+            }]);
+
+
+
+            function handleClick(){
+
+              setChatMessages([
+                ...chatMessages,
+                {
+                  message: "new text",
+                  sender: "robot", 
+                  id: crypto.randomUUID()
+                }
+              ])
+
+              //  chatMessages.push({
+              //   message: 'testing',
+              //   sender: 'user',
+              //   id: crypto.randomUUID()
+              //  });
+
+              //  console.log(chatMessages)
+            }
+
+            return (
+                    <>
+                    <button onClick={handleClick}>Send message</ button>
+                            
+                        { chatMessages.map((chatMessages) => {
+                            return ( 
+                            <ChatMessage 
+                                    message = {chatMessages.message}
+                                    sender = {chatMessages.sender}
+                                    key = {chatMessages.id}
+                                    />
+                                )
+                            })
+                        }
+                    </>
+                   )
+
+
+        }
+
+        function App(){
+
+
+
+
+            return (
+                <>  
+                <ChatInput />
+                
+
+                <ChatMessages />
 
             </>
-        );
+        )};
 
         const container = document.querySelector('.js-container');
-        ReactDOM.createRoot(container).render(app);
+        ReactDOM.createRoot(container).render(<App />);
     </script>
 </body>
 </html>
